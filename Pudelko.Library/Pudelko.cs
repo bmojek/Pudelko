@@ -12,52 +12,20 @@ namespace PudelkoLibrary
         private readonly double _b = 0.1;
         private readonly double _c = 0.1;
         private readonly UnitOfMeasure unit;
-        private double[] ArrOfLngth => new double[] { A, B, C };
 
-        public double A => CutNumb(_a);
-        public double B => CutNumb(_b);
-        public double C => CutNumb(_c);
+        public double A { get => CutNumb(_a); }
+        public double B { get => CutNumb(_b); }
+        public double C { get => CutNumb(_c); }
 
-        public double Volume => Math.Round((A * B * C), 9);
-        public double Area => Math.Round((2 * A * B + 2 * A * C + 2 * B * C), 6);
+        public double Objetosc { get => Math.Round((A * B * C), 9); }
 
-        public double this[int index]
+        public double Pole { get => Math.Round((2 * A * B + 2 * A * C + 2 * B * C), 6); }
+
+        private double[] ArrPudelko => new double[] { A, B, C };
+
+        public double this[int i]
         {
-            get => ArrOfLngth[index];
-        }
-
-        private double CutNumb(double num)
-        {
-            return Math.Truncate(num * 1000) / 1000;
-        }
-
-        // Constructors
-
-        #region Constructors
-
-        public Pudelko(double a, double b, double c, UnitOfMeasure unit = UnitOfMeasure.meter)
-        {
-            _a = ConvertToMeters(a, unit);
-            _b = ConvertToMeters(b, unit);
-            _c = ConvertToMeters(c, unit);
-            this.unit = unit;
-
-            CheckNumb(A, B, C);
-        }
-
-        public Pudelko(double a, double b, UnitOfMeasure unit = UnitOfMeasure.meter)
-        {
-            _a = ConvertToMeters(a, unit);
-            _b = ConvertToMeters(b, unit);
-
-            CheckNumb(A, B, C);
-        }
-
-        public Pudelko(double a = 0.1, UnitOfMeasure unit = UnitOfMeasure.meter)
-        {
-            _a = ConvertToMeters(a, unit);
-
-            CheckNumb(A, B, C);
+            get => ArrPudelko[i];
         }
 
         private void CheckNumb(double a, double b, double c)
@@ -69,11 +37,51 @@ namespace PudelkoLibrary
                 throw new ArgumentOutOfRangeException();
         }
 
-        #endregion Constructors
+        private double CutNumb(double num)
+        {
+            return Math.Truncate(num * 1000) / 1000;
+        }
 
-        //ToString
+        private double ToMeters(double number, UnitOfMeasure unit)
+        {
+            if (unit is UnitOfMeasure.milimeter)
+            {
+                return number / 1000;
+            }
+            else if (unit is UnitOfMeasure.centimeter)
+            {
+                return number / 100;
+            }
+            else
+            {
+                return number;
+            }
+        }
 
-        #region ToString
+        public Pudelko(double a, double b, double c, UnitOfMeasure unit = UnitOfMeasure.meter)
+        {
+            _a = ToMeters(a, unit);
+            _b = ToMeters(b, unit);
+            _c = ToMeters(c, unit);
+            this.unit = unit;
+
+            CheckNumb(A, B, C);
+        }
+
+        public Pudelko(double a, double b, UnitOfMeasure unit = UnitOfMeasure.meter)
+        {
+            _a = ToMeters(a, unit);
+            _b = ToMeters(b, unit);
+
+            CheckNumb(A, B, C);
+        }
+
+        public Pudelko(double a = 0.1, UnitOfMeasure unit = UnitOfMeasure.meter)
+        {
+            _a = ToMeters(a, unit);
+
+            CheckNumb(A, B, C);
+        }
 
         public override string ToString()
         {
@@ -107,15 +115,9 @@ namespace PudelkoLibrary
             }
         }
 
-        #endregion ToString
-
-        // Equals
-
-        #region Equals
-
-        public bool Equals(Pudelko other)
+        public bool Equals(Pudelko pudelko)
         {
-            return this == other;
+            return this == pudelko;
         }
 
         public override bool Equals(object obj)
@@ -130,12 +132,6 @@ namespace PudelkoLibrary
         {
             return base.GetHashCode();
         }
-
-        #endregion Equals
-
-        // Operators
-
-        #region Operators
 
         public static bool operator ==(Pudelko p1, Pudelko p2)
         {
@@ -155,26 +151,29 @@ namespace PudelkoLibrary
 
         public static Pudelko operator +(Pudelko p1, Pudelko p2)
         {
-            var arr = new double[]
+            double[] arrA =
             {
                 p1.A,
                 p1.B,
-                p1.C,
+                p1.C
+            };
+            double[] arrB =
+            {
                 p2.A,
                 p2.B,
                 p2.C
             };
+            arrA = arrA.OrderByDescending(x => x).ToArray();
+            arrB = arrB.OrderByDescending(x => x).ToArray();
 
-            var sortedArr = arr.OrderByDescending(x => x).ToArray();
+            double side1 = arrA[1];
+            double side2 = arrA[0];
 
-            return new Pudelko(sortedArr[0], sortedArr[1], sortedArr[2]);
+            if (arrB[1] > arrA[1]) side1 = arrB[1];
+            if (arrB[0] > arrA[0]) side2 = arrB[0];
+
+            return new Pudelko(arrA[2] + arrB[2], side1, side2);
         }
-
-        #endregion Operators
-
-        // Enumerator
-
-        #region Enumerator
 
         public IEnumerator<double> GetEnumerator()
         {
@@ -187,7 +186,6 @@ namespace PudelkoLibrary
         }
 
         private int position = -1;
-        private readonly Pudelko _p;
 
         public double Current => this[position];
 
@@ -195,6 +193,7 @@ namespace PudelkoLibrary
 
         public void Dispose()
         {
+            position = -1;
         }
 
         public bool MoveNext()
@@ -207,27 +206,6 @@ namespace PudelkoLibrary
         public void Reset()
         {
             position = -1;
-        }
-
-        #endregion Enumerator
-
-        // Converters
-
-        #region Converters
-
-        private double ConvertToMeters(double number, UnitOfMeasure unit)
-        {
-            switch (unit)
-            {
-                case UnitOfMeasure.milimeter:
-                    return number / 1000;
-
-                case UnitOfMeasure.centimeter:
-                    return number / 100;
-
-                default:
-                    return number;
-            }
         }
 
         public static explicit operator double[](Pudelko p)
@@ -246,12 +224,6 @@ namespace PudelkoLibrary
         {
             return new Pudelko(dimensions.Item1, dimensions.Item2, dimensions.Item3, UnitOfMeasure.milimeter);
         }
-
-        #endregion Converters
-
-        // Parse
-
-        #region Parse
 
         public Pudelko Parse(string stringToParse)
         {
@@ -279,13 +251,11 @@ namespace PudelkoLibrary
                     break;
             }
 
-            var a = ConvertToMeters(double.Parse(arr[0], format), unit);
-            var b = ConvertToMeters(double.Parse(arr[3], format), unit);
-            var c = ConvertToMeters(double.Parse(arr[6], format), unit);
+            var a = ToMeters(double.Parse(arr[0], format), unit);
+            var b = ToMeters(double.Parse(arr[3], format), unit);
+            var c = ToMeters(double.Parse(arr[6], format), unit);
 
             return new Pudelko(a, b, c);
         }
-
-        #endregion Parse
     }
 }

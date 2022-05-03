@@ -1,7 +1,5 @@
 ﻿using PudelkoLibrary;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PudelkoApp
 {
@@ -9,9 +7,9 @@ namespace PudelkoApp
     {
         public static Pudelko Kompresuj(this Pudelko p)
         {
-            var volume = p.Volume;
+            var objetosc = p.Objetosc;
 
-            var side = Math.Cbrt(volume);
+            var side = Math.Cbrt(objetosc);
 
             return new Pudelko(side, side, side);
         }
