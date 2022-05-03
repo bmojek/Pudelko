@@ -1,30 +1,47 @@
 ﻿using P = PudelkoLibrary.Pudelko;
 using PudelkoLibrary;
 using System;
+using System.Collections.Generic;
 
 namespace PudelkoApp
 {
     public class Program
     {
+        public static int ComparePudelka(P p1, P p2)
+        {
+            if (p1.Objetosc < p2.Objetosc) return -1;
+            else if (p1.Objetosc == p2.Objetosc && p1.Pole < p2.Pole) return -1;
+            else if (p1.Pole == p2.Pole && p1.A + p1.B + p1.C < p2.A + p2.B + p2.C) return -1;
+            else return 1;
+        }
+
         private static void Main(string[] args)
         {
-            Console.WriteLine("Pudełko toString: ");
-            Console.WriteLine(new P(2.5, 9.321, 0.1, UnitOfMeasure.meter).ToString());
-            Console.WriteLine(new P(2.5, 9.321, 0.1, UnitOfMeasure.meter).ToString("m"));
-            Console.WriteLine(new P(2.5, 9.321, 0.1, UnitOfMeasure.meter).ToString("cm"));
-            Console.WriteLine(new P(2.5, 9.321, 0.1, UnitOfMeasure.meter).ToString("mm"));
-            P pudelko = new P(4, 8, 9);
-            Console.WriteLine($"\nObjetosc pudelka o wymiarach: { pudelko.ToString()} wynosi {pudelko.Objetosc} m^3");
-            Console.WriteLine($"Pole pudelka o wymiarach: { pudelko.ToString()} wynosi {pudelko.Pole} m^2");
+            List<P> pudelka = new List<P>();
+            P p1 = new P(1000, 2000, 3000, UnitOfMeasure.milimeter);
+            P p2 = new P(1.4, 2, 3.45);
+            P p6 = new P(1.4, 2, 6);
+            P p3 = new P(2.5, 9.321, 0.1, UnitOfMeasure.meter);
+            P p5 = new P(500, 345, 100, UnitOfMeasure.centimeter);
+            P p4 = new P(50, 40.2, 7, UnitOfMeasure.centimeter);
 
-            P p1 = new P(7, 4, 2);
-            P p2 = new P(2, 4, 7);
+            pudelka.Add(p1);
+            pudelka.Add(p2);
+            pudelka.Add(p3);
+            pudelka.Add(p4);
+            pudelka.Add(p5);
+            pudelka.Add(p6);
 
-            if (p1 == p2)
+            foreach (var x in pudelka)
             {
-                Console.WriteLine($"\nPudelko {p1.ToString("mm")} jest takie samo jak pudelko {p2.ToString()}");
+                Console.WriteLine(x.ToString());
             }
-            Console.WriteLine((p1 + p2).ToString());
+            pudelka.Sort(ComparePudelka);
+            Console.WriteLine("------------------------");
+            foreach (var x in pudelka)
+            {
+                Console.WriteLine($"{x.ToString()} objetosc: {x.Objetosc} m^3");
+            }
         }
     }
 }

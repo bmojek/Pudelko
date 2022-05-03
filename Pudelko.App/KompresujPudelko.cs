@@ -3,7 +3,7 @@ using System;
 
 namespace PudelkoApp
 {
-    public static class PKompresuj
+    public static class KompresujPudelko
     {
         public static Pudelko Kompresuj(this Pudelko p)
         {

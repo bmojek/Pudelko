@@ -439,19 +439,218 @@ namespace PudelkoUnitTests
 
         #region Pole, Objętość ===================================
 
-        // ToDo
+        [DataTestMethod, TestCategory("Objetość")]
+        [DataRow(4, 6, 8, 192)]
+        [DataRow(1, 9.1, 4, 36.4)]
+        [DataRow(0.1, 0.1, 0.1, 0.001)]
+        [DataRow(1, 1, 1, 1)]
+        public void Volume_Meter_Test(double a, double b, double c, double volumeResult)
+        {
+            var p = new Pudelko(a, b, c, unit: UnitOfMeasure.meter);
+            Assert.AreEqual(volumeResult, p.Objetosc);
+        }
+
+        [DataTestMethod, TestCategory("Objetość")]
+        [DataRow(250, 932.1, 10, 2.33025)]
+        [DataRow(100, 910, 400, 36.4)]
+        [DataRow(10, 10, 10, 0.001)]
+        [DataRow(250.5, 92.1, 10, 0.23046)]
+        public void Volume_Centimeter_Test(double a, double b, double c, double volumeResult)
+        {
+            var p = new Pudelko(a, b, c, unit: UnitOfMeasure.centimeter);
+            Assert.AreEqual(volumeResult, p.Objetosc);
+        }
+
+        [DataTestMethod, TestCategory("Objętość")]
+        [DataRow(100, 255, 3, 0.0000765)]
+        [DataRow(100.0, 25.58, 3.13, 0.0000075)]
+        public void Volume_Milimeter_Test(double a, double b, double c, double volumeResult)
+        {
+            var p = new Pudelko(a, b, c, unit: UnitOfMeasure.milimeter);
+            Assert.AreEqual(volumeResult, p.Objetosc);
+        }
+
+        [DataTestMethod, TestCategory("Pole")]
+        [DataRow(2.5, 9.321, 0.1, 48.9692)]
+        [DataRow(1, 9.1, 4, 99)]
+        [DataRow(0.1, 0.1, 0.1, 0.06)]
+        [DataRow(1, 1, 1, 6)]
+        public void Area_Meter_Test(double a, double b, double c, double areaResult)
+        {
+            var p = new Pudelko(a, b, c, unit: UnitOfMeasure.meter);
+            Assert.AreEqual(areaResult, p.Pole);
+        }
+
+        [DataTestMethod, TestCategory("Pole")]
+        [DataRow(250, 932.1, 10, 48.9692)]
+        [DataRow(100, 910, 400, 99)]
+        [DataRow(10, 10, 10, 0.06)]
+        [DataRow(250.5, 92.1, 10, 5.2942)]
+        public void Area_Centimeter_Test(double a, double b, double c, double areaResult)
+        {
+            var p = new Pudelko(a, b, c, unit: UnitOfMeasure.centimeter);
+            Assert.AreEqual(areaResult, p.Pole);
+        }
+
+        [DataTestMethod, TestCategory("Pole")]
+        [DataRow(100, 255, 3, 0.05313)]
+        [DataRow(100.0, 25.58, 3.13, 0.00575)]
+        public void Area_Milimeter_Test(double a, double b, double c, double areaResult)
+        {
+            var p = new Pudelko(a, b, c, unit: UnitOfMeasure.milimeter);
+            Assert.AreEqual(areaResult, p.Pole);
+        }
 
         #endregion Pole, Objętość ===================================
 
         #region Equals ===========================================
 
-        // ToDo
+        [DataTestMethod, TestCategory("Equals")]
+        [DataRow(1.0, 2.543, 3.1,
+                 2.543, 1.0, 3.1, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 1.0, 2.541, 3.1, false)]
+        [DataRow(10, 2.54387, 3.1005,
+                 2.54387, 3.1005, 10, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 1.0, 2.541, 3.1, false)]
+        public void Equals_Meters(double a, double b, double c,
+                                                      double a2, double b2, double c2, bool expected)
+        {
+            Pudelko p1 = new Pudelko(a, b, c, unit: UnitOfMeasure.meter);
+            Pudelko p2 = new Pudelko(a2, b2, c2, unit: UnitOfMeasure.meter);
+
+            Assert.AreEqual(expected, p1.Equals(p2));
+        }
+
+        [DataTestMethod, TestCategory("Equals")]
+        [DataRow(1.0, 2.543, 3.1,
+                 254.3, 100, 310, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 100, 254.1, 310, false)]
+        [DataRow(10, 2.54387, 3.1005,
+                 254.387, 310.05, 1000, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 1000, 254.1, 310, false)]
+        public void Equals_Meters_And_Centimeters(double a, double b, double c, double a2, double b2, double c2, bool expected)
+        {
+            Pudelko p1 = new Pudelko(a, b, c, unit: UnitOfMeasure.meter);
+            Pudelko p2 = new Pudelko(a2, b2, c2, unit: UnitOfMeasure.centimeter);
+
+            Assert.AreEqual(expected, p1.Equals(p2));
+        }
+
+        [DataTestMethod, TestCategory("Equals")]
+        [DataRow(1.0, 2.543, 3.1,
+                 2543, 1000, 3100, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 1000, 2541, 3100, false)]
+        [DataRow(10, 2.54387, 3.1005,
+                 2543.87, 3100.5, 10000, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 10000, 2541, 3100, false)]
+        public void Equals_Meters_And_Milimeters(double a, double b, double c, double a2, double b2, double c2, bool expected)
+        {
+            Pudelko p1 = new Pudelko(a, b, c, unit: UnitOfMeasure.meter);
+            Pudelko p2 = new Pudelko(a2, b2, c2, unit: UnitOfMeasure.milimeter);
+
+            Assert.AreEqual(expected, p1.Equals(p2));
+        }
 
         #endregion Equals ===========================================
 
         #region Operators overloading ===========================
 
-        // ToDo
+        [DataTestMethod, TestCategory("EqualsOperator")]
+        [DataRow(1.0, 2.543, 3.1,
+                 2.543, 1.0, 3.1, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 1.0, 2.541, 3.1, false)]
+        [DataRow(10, 2.54387, 3.1005,
+                 2.54387, 3.1005, 10, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 1.0, 2.541, 3.1, false)]
+        public void EqualsOperator_Meters(double a, double b, double c,
+                                                      double a2, double b2, double c2, bool expected)
+        {
+            Pudelko p1 = new Pudelko(a, b, c, unit: UnitOfMeasure.meter);
+            Pudelko p2 = new Pudelko(a2, b2, c2, unit: UnitOfMeasure.meter);
+
+            Assert.AreEqual(expected, p1 == p2);
+        }
+
+        [DataTestMethod, TestCategory("Equals")]
+        [DataRow(1.0, 2.543, 3.1,
+                 254.3, 100, 310, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 100, 254.1, 310, false)]
+        [DataRow(10, 2.54387, 3.1005,
+                 254.387, 310.05, 1000, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 1000, 254.1, 310, false)]
+        public void EqualsOperator_Meters_And_Centimeters(double a, double b, double c,
+                                                      double a2, double b2, double c2, bool expected)
+        {
+            Pudelko p1 = new Pudelko(a, b, c, unit: UnitOfMeasure.meter);
+            Pudelko p2 = new Pudelko(a2, b2, c2, unit: UnitOfMeasure.centimeter);
+
+            Assert.AreEqual(expected, p1 == p2);
+        }
+
+        [DataTestMethod, TestCategory("Equals")]
+        [DataRow(1.0, 2.543, 3.1,
+                 2543, 1000, 3100, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 1000, 2541, 3100, false)]
+        [DataRow(10, 2.54387, 3.1005,
+                 2543.87, 3100.5, 10000, true)]
+        [DataRow(1.0001, 2.54387, 3.1005,
+                 10000, 2541, 3100, false)]
+        public void EqualsOperator_Meters_And_Milimeters(double a, double b, double c,
+                                                      double a2, double b2, double c2, bool expected)
+        {
+            Pudelko p1 = new Pudelko(a, b, c, unit: UnitOfMeasure.meter);
+            Pudelko p2 = new Pudelko(a2, b2, c2, unit: UnitOfMeasure.milimeter);
+
+            Assert.AreEqual(expected, p1 == p2);
+        }
+
+        [DataTestMethod, TestCategory("AddOperator")]
+        [DataRow(1.0, 2.0, 3.0,
+                 1.0, 2.0, 3.0,
+                 2.0, 2.0, 3.0)]
+        [DataRow(5.0, 3.0, 2.0,
+                 1.0, 2.0, 3.0,
+                 3.0, 3.0, 5.0)]
+        public void AddOperator_Meters(double a, double b, double c,
+                                                      double a2, double b2, double c2,
+                                                      double addedA, double addedB, double addedC
+                                                      )
+        {
+            Pudelko p1 = new Pudelko(a, b, c, unit: UnitOfMeasure.meter);
+            Pudelko p2 = new Pudelko(a2, b2, c2, unit: UnitOfMeasure.meter);
+
+            Pudelko expected = new Pudelko(addedA, addedB, addedC);
+
+            Assert.AreEqual(true, expected.Equals(p1 + p2));
+        }
+
+        [DataTestMethod, TestCategory("AddOperator")]
+        [DataRow(1.0, 2.543, 3.1,
+                 254.3, 100, 310,
+                 2, 2.543, 3.1)]
+        public void AddOperator_Meters_And_Centimeters(double a, double b, double c,
+                                                      double a2, double b2, double c2,
+                                                      double addedA, double addedB, double addedC
+                                                      )
+        {
+            Pudelko p1 = new Pudelko(a, b, c, unit: UnitOfMeasure.meter);
+            Pudelko p2 = new Pudelko(a2, b2, c2, unit: UnitOfMeasure.centimeter);
+
+            Pudelko expected = new Pudelko(addedA, addedB, addedC);
+
+            Assert.AreEqual(true, expected.Equals(p1 + p2));
+        }
 
         #endregion Operators overloading ===========================
 
